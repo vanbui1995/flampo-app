@@ -1,12 +1,13 @@
 import { ConfigProvider } from 'antd';
-import { createContext, FC, ReactNode, useCallback, useContext, useState } from 'react';
+import { createContext, FC, ReactNode, useCallback, useState } from 'react';
 import { themeConfig } from '@/types';
+import { StyleProvider } from '@ant-design/cssinjs';
 
 interface IDisplayDataValue {
   toggleTheme: () => void;
 }
 
-const ThemeContext = createContext<IDisplayDataValue>({ toggleTheme: () => {} });
+export const ThemeContext = createContext<IDisplayDataValue>({ toggleTheme: () => {} });
 
 const ThemeProvider: FC<{ children: ReactNode }> = (props) => {
   const [state, setState] = useState<'dark' | 'light'>('dark');
@@ -16,13 +17,11 @@ const ThemeProvider: FC<{ children: ReactNode }> = (props) => {
   }, []);
   return (
     <ThemeContext.Provider value={{ toggleTheme }}>
-      <ConfigProvider theme={themeConfig[state]}>{props.children}</ConfigProvider>
+      <StyleProvider hashPriority="high">
+        <ConfigProvider theme={themeConfig[state]}>{props.children}</ConfigProvider>
+      </StyleProvider>
     </ThemeContext.Provider>
   );
 };
 
 export default ThemeProvider;
-
-export const useTheme = () => {
-  return useContext(ThemeContext);
-};
