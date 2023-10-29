@@ -1,34 +1,41 @@
-import { useState } from 'react';
-import reactLogo from '../public/assets/react.svg';
-import viteLogo from '/vite.svg';
-import { useTranslation } from 'react-i18next';
-import { Button } from 'antd';
-import { useTheme } from '@/contexts';
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { Layout } from 'antd';
+import { RequiredRoute } from '@/components/common';
+import { LoginPage, RegisterPage, DashboardPage, MyTaskPage } from '@/pages';
+import { ROUTE_PATH } from '@/constants';
+import { Footer, Header, SideBar } from '@/components/layout';
 
 function App() {
-  const { t } = useTranslation();
-
-  const { toggleTheme } = useTheme();
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className={''}>{t('titles.app')}</h1>
-      <div className="font-bold ">
-        <Button type={'primary'} className={'w-[200px]'} onClick={toggleTheme}>
-          Theme
-        </Button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="flex">Click on the Vite and React logos to learn more</p>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Navigate to={ROUTE_PATH.LOGIN} />} />
+          <Route path={ROUTE_PATH.LOGIN} element={<LoginPage />} />
+          <Route path={ROUTE_PATH.REGISTER} element={<RegisterPage />} />
+          <Route
+            path={ROUTE_PATH.APP.ROOT}
+            element={
+              <RequiredRoute>
+                <Layout className="flex h-full w-full">
+                  <Header />
+                  <Layout className="min-h-[calc(100vh-265px)]" hasSider>
+                    <SideBar />
+                    <Layout.Content>
+                      <Outlet />
+                    </Layout.Content>
+                  </Layout>
+                  <Footer />
+                </Layout>
+              </RequiredRoute>
+            }
+          >
+            <Route path={ROUTE_PATH.APP.ROOT} element={<DashboardPage />} />
+            <Route path={ROUTE_PATH.APP.MY_TASKS} element={<MyTaskPage />} />
+            <Route path={'*'} element={<div>Not Found</div>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
