@@ -1,5 +1,5 @@
 import { Layout } from 'antd';
 
 export const SideBar = () => {
-  return <Layout.Sider className='bg-white'>Sider</Layout.Sider>;
+  return <Layout.Sider className=''>Sider</Layout.Sider>;
 };

@@ -47,7 +47,7 @@ export const Header = () => {
   const navigate = useNavigate();
   const location = useLocation()
   return (
-    <Layout.Header className="h-[110px] bg-white p-0">
+    <Layout.Header className="h-[110px] p-0">
       <Menu
         onSelect={({ key }) => {
           if (key[0] === '#') {

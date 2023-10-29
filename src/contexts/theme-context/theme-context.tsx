@@ -17,9 +17,9 @@ const ThemeProvider: FC<{ children: ReactNode }> = (props) => {
   }, []);
   return (
     <ThemeContext.Provider value={{ toggleTheme }}>
-      <StyleProvider hashPriority="high">
-        <ConfigProvider theme={themeConfig[state]}>{props.children}</ConfigProvider>
-      </StyleProvider>
+      <ConfigProvider theme={themeConfig[state]}>
+        <StyleProvider hashPriority="high">{props.children}</StyleProvider>
+      </ConfigProvider>
     </ThemeContext.Provider>
   );
 };
