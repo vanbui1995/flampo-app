@@ -1,0 +1,14 @@
+overwrite: true
+schema: "http://054a-115-73-208-186.ngrok-free.app/graphql"
+documents: "./src/**/*.graphql"
+generates:
+  ./src/gql-type-and-hook/index.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-query
+    config:
+      addInfiniteQuery: true
+      fetcher:
+        func: '../utils/customFetcher#useFetchData'
+        isReactHook: true

@@ -1,0 +1,10 @@
+mutation Mutation($payload: LoginDto!) {
+  login(payload: $payload) {
+    accessToken
+    email
+    firstName
+    id
+    lastName
+    refreshToken
+  }
+}
