@@ -27,6 +27,7 @@ const generalConfig: ThemeConfig = {
       fontSizeSM: 14,
     },
     Input: {
+      colorIcon: 'black',
       controlHeight: 46,
       borderRadius: 10,
       borderRadiusLG: 20,
@@ -60,12 +61,12 @@ export const themeConfig: Record<THEME_MODE, ThemeConfig> = {
     components: {
       ...generalConfig.components,
       Typography: {
-        ...generalConfig.components.Typography,
+        ...generalConfig?.components?.Typography,
         colorText: '#253858',
         colorTextDisabled: '#848484',
       },
       Input: {
-        ...generalConfig.components.Input,
+        ...generalConfig?.components?.Input,
         colorBgContainer: '#F0F0F0',
         colorText: '#fff',
       },
@@ -90,11 +91,11 @@ export const themeConfig: Record<THEME_MODE, ThemeConfig> = {
     components: {
       ...generalConfig.components,
       Typography: {
-        ...generalConfig.components.Typography,
+        ...generalConfig?.components?.Typography,
         colorText: '#fff',
       },
       Input: {
-        ...generalConfig.components.Input,
+        ...generalConfig?.components?.Input,
         colorBgContainer: '#F0F0F0',
         colorText: '#253858',
       },

@@ -1,8 +1,9 @@
 import * as yup from 'yup';
 import { ROUTE_PATH } from '@/constants';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Form, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ControlledInput } from '@/components/common/form/controlled-input';
@@ -25,6 +26,8 @@ export const LoginPage = () => {
   const { handleSubmit, reset, control } = useForm({
     resolver: yupResolver<FormValues>(schema),
   });
+  const location = useLocation();
+  const from: string = location.state?.from;
   const { user, setUser } = useAuth();
   const loginMutation = useLoginMutation({
     onError: handleBasicError,
@@ -38,7 +41,7 @@ export const LoginPage = () => {
   const { t } = useTranslation();
 
   if (user) {
-    return <Navigate to={'/app'} />;
+    return <Navigate to={from || ROUTE_PATH.APP.ROOT} />;
   }
 
   return (
@@ -69,8 +72,8 @@ export const LoginPage = () => {
             control={control}
             type={INPUT_TYPES.PASSWORD}
             formItemProps={{ label: 'Password' }}
+            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
           />
-
           <Button loading={loginMutation.isLoading} htmlType="submit">
             Sign In
           </Button>
