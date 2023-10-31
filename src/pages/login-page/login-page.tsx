@@ -1,10 +1,51 @@
+import * as yup from 'yup';
 import { ROUTE_PATH } from '@/constants';
-import { Input, Button } from 'antd';
+import { Button, Form, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { ControlledInput } from '@/components/common/form/controlled-input';
+import { INPUT_TYPES } from '@/types/input';
+import { useLoginMutation } from '@/gql-type-and-hook';
+import { handleBasicError } from '@/utils/func';
+import { useAuth } from '@/contexts/auth-context/useAuth';
+
+const schema = yup.object().shape({
+  email: yup.string().email().required('Required'),
+  password: yup.string().min(6, 'Must be at least 6 characters').required('Required'),
+});
+
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 export const LoginPage = () => {
+  const {
+    handleSubmit,
+    formState: { errors },
+    reset,
+    control,
+  } = useForm({
+    resolver: yupResolver<FormValues>(schema),
+  });
+  const { user, setUser } = useAuth();
+  const loginMutation = useLoginMutation({
+    onError: handleBasicError,
+    onSuccess: (res) => {
+      reset();
+      setUser(res.login);
+      console.info(res);
+      notification.success({ message: 'Login successfully' });
+    },
+  });
   const { t } = useTranslation();
+
+  if (user) {
+    return <Navigate to={'/app'} />;
+  }
+
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -14,40 +55,25 @@ export const LoginPage = () => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-              Username
-            </label>
-            <div className="mt-2">
-              <Input />
-            </div>
-          </div>
+        <Form
+          onFinish={handleSubmit((data) => {
+            loginMutation.mutateAsync({ payload: data });
+          })}
+          layout="vertical"
+          className="space-y-6"
+        >
+          <ControlledInput name="email" control={control} type={INPUT_TYPES.INPUT} formItemProps={{ label: 'Email' }} />
+          <ControlledInput
+            name="password"
+            control={control}
+            type={INPUT_TYPES.INPUT}
+            formItemProps={{ label: 'Password' }}
+          />
 
-          <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                Password
-              </label>
-              <div className="text-sm">
-                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                  Forgot password?
-                </a>
-              </div>
-            </div>
-            <div className="mt-2">
-              <Input.Password />
-            </div>
-          </div>
-
-          <div>
-            <Button
-              htmlType="submit"
-            >
-              Sign In
-            </Button>
-          </div>
-        </form>
+          <Button loading={loginMutation.isLoading} htmlType="submit">
+            Sign In
+          </Button>
+        </Form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Don't have an account? <Link to={ROUTE_PATH.REGISTER}>Register</Link>

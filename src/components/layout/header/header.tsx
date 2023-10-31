@@ -3,6 +3,7 @@ import { Button, Layout, Menu, MenuProps } from 'antd';
 import { useTheme } from '@/contexts';
 import { ROUTE_PATH } from '@/constants';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/auth-context/useAuth';
 
 const items: MenuProps['items'] = [
   {
@@ -40,18 +41,27 @@ const items: MenuProps['items'] = [
     key: ROUTE_PATH.APP.BOARD,
     icon: <AppstoreOutlined />,
   },
+  {
+    label: 'Logout',
+    key: '#logout',
+    icon: <AppstoreOutlined />,
+  },
 ];
 
 export const Header = () => {
   const { toggleTheme } = useTheme();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
+  const { logout } = useAuth();
   return (
     <Layout.Header className="h-[110px] p-0">
       <Menu
         onSelect={({ key }) => {
           if (key[0] === '#') {
             switch (key) {
+              case '#logout':
+                logout();
+                break;
               default:
                 break;
             }

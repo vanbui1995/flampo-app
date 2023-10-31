@@ -8,6 +8,10 @@
     "registerNewAccount": "Register new account",
     "signInAccount": "Sign in to your account"
   },
+  "errors": {
+    "INVALID_CREDENTIALS": "Your email or password is incorrect",
+    "UNEXPECTED_ERRORS": "Unexpected error from server side, please reload again!"
+  },
   "validation": {
     "messages": {
       "requireToPass": "You need to answer this question in order to proceed",

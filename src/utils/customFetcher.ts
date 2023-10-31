@@ -36,12 +36,7 @@ export const useFetchData = <TData, TVariables>(
       })
       .catch((e) => {
         if ((e as unknown as IGraphQLErrorResponse).response.errors[0].extensions.appErrorCode === 'TOKEN_EXPIRES') {
-          // displayAlert(e);
-          // handleLogout();
-          // if (setAuth) {
-          //   setAuth({ idToken: undefined });
-          // }
-          // navigate(ROUTE_PATH.SIGN_IN);
+          console.log(e);
         }
         return Promise.reject(e);
       });

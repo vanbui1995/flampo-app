@@ -1,5 +1,5 @@
 overwrite: true
-schema: "http://054a-115-73-208-186.ngrok-free.app/graphql"
+schema: "https://b4eb-115-73-208-186.ngrok-free.app/graphql"
 documents: "./src/**/*.graphql"
 generates:
   ./src/gql-type-and-hook/index.tsx:

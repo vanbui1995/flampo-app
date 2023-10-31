@@ -1,20 +1,26 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
 import 'antd/dist/reset.css';
-
 import './i18n';
+
 import ThemeProvider from '@/contexts/theme-context/theme-context';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthWrapperContext } from './contexts/auth-context/auth-context.tsx';
+import { FullScreenLoading } from './components/common/loading/fullscreen-loading.tsx';
 
+const queryClient = new QueryClient();
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <Suspense fallback="loading">
-      <ThemeProvider>
+console.log({ queryClient });
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <AuthWrapperContext>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
         <App />
-      </ThemeProvider>
-    </Suspense>
-  </React.StrictMode>,
+      </QueryClientProvider>
+    </ThemeProvider>
+  </AuthWrapperContext>,
 );

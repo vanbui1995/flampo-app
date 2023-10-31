@@ -67,13 +67,17 @@ export const themeConfig: Record<THEME_MODE, ThemeConfig> = {
       Input: {
         ...generalConfig.components.Input,
         colorBgContainer: '#F0F0F0',
+        colorText: '#fff',
       },
       Layout: {
         ...generalConfig.components?.Layout,
         headerBg: '#F2F7FF',
         siderBg: '#F2F7FF',
       },
-      
+      Form: {
+        labelColor: '#fff',
+        
+      },
     },
   },
   [THEME_MODE.DARK]: {
@@ -92,11 +96,15 @@ export const themeConfig: Record<THEME_MODE, ThemeConfig> = {
       Input: {
         ...generalConfig.components.Input,
         colorBgContainer: '#F0F0F0',
+        colorText: '#253858',
       },
       Layout: {
         ...generalConfig.components?.Layout,
         headerBg: '#253858',
         siderBg: '#253858',
+      },
+      Form: {
+        labelColor: '#253858',
       },
     },
   },

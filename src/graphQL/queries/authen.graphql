@@ -1,4 +1,4 @@
-mutation Mutation($payload: LoginDto!) {
+mutation Login($payload: LoginDto!) {
   login(payload: $payload) {
     accessToken
     email
