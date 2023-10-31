@@ -4,6 +4,8 @@ import { RequiredRoute } from '@/components/common';
 import { LoginPage, RegisterPage, DashboardPage, MyTaskPage } from '@/pages';
 import { ROUTE_PATH } from '@/constants';
 import { Footer, Header, SideBar } from '@/components/layout';
+import { Suspense } from 'react';
+import { FullScreenLoading } from './components/common';
 
 function App() {
   return (
@@ -19,10 +21,12 @@ function App() {
               <RequiredRoute>
                 <Layout className="flex h-full w-full">
                   <Header />
-                  <Layout className="min-h-[calc(100vh-265px)]" hasSider>
+                  <Layout className="min-h-[calc(100vh-179px)]" hasSider>
                     <SideBar />
                     <Layout.Content>
-                      <Outlet />
+                      <Suspense fallback={<FullScreenLoading />}>
+                        <Outlet />
+                      </Suspense>
                     </Layout.Content>
                   </Layout>
                   <Footer />

@@ -1,5 +1,6 @@
 import { LOCAL_STORAGE_KEY } from '@/constants';
 import { RegisterResponseDto } from '@/gql-type-and-hook';
+import { parseUserFromLocalStorage } from '@/utils/func';
 import { createContext, ReactNode, useCallback, useState } from 'react';
 
 interface AuthContext {
@@ -13,20 +14,6 @@ export const AuthContext = createContext<AuthContext>({
   setUser: () => {},
   logout: () => {},
 });
-
-const parseUserFromLocalStorage = (): RegisterResponseDto | null => {
-  const jsonString = localStorage.getItem(LOCAL_STORAGE_KEY.AUTH);
-  try {
-    if (jsonString) {
-      const user: RegisterResponseDto = JSON.parse(jsonString);
-      return user;
-    }
-    return null;
-  } catch (error) {
-    console.warn(`Can't parse json, set null for default`);
-    return null;
-  }
-};
 
 export const AuthWrapperContext = (props: { children: ReactNode }) => {
   const [user, setUserWithoutLocalStorage] = useState<RegisterResponseDto | null>(parseUserFromLocalStorage());

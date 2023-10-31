@@ -1,5 +1,7 @@
 import { GraphQLClient, Variables } from 'graphql-request';
 import { IGraphQLErrorResponse } from '@/types';
+import { useAuth } from '@/contexts';
+import { parseUserFromLocalStorage } from './func';
 
 export const queryOption = { retry: 4, refetchOnWindowFocus: false };
 
@@ -13,20 +15,12 @@ export const useFetchData = <TData, TVariables>(
   query: string,
   options?: RequestInit['headers'] & Record<string, string>,
 ): ((variables?: TVariables) => Promise<TData>) => {
-  // const { idToken, setAuth } = useAuthContext();
-
   const headers: RequestInit['headers'] & Record<string, string> = options || {};
-  const idToken = '';
+  const { user, logout } = useAuth();
+  const idToken = user?.accessToken || parseUserFromLocalStorage()?.accessToken;
   if (idToken) {
     headers.authorization = `Bearer ${idToken}`;
-  } else {
-    const idTokenLocalStorgage = localStorage.getItem('idToken');
-
-    if (idTokenLocalStorgage) {
-      headers.authorization = `Bearer ${idTokenLocalStorgage}`;
-    }
   }
-
   return async (variables): Promise<TData> => {
     return client
       .request<TData>({
@@ -37,6 +31,7 @@ export const useFetchData = <TData, TVariables>(
       .catch((e) => {
         if ((e as unknown as IGraphQLErrorResponse).response.errors[0].extensions.appErrorCode === 'TOKEN_EXPIRES') {
           console.log(e);
+          logout();
         }
         return Promise.reject(e);
       });

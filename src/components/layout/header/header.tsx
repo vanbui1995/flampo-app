@@ -1,35 +1,15 @@
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
-import { Button, Layout, Menu, MenuProps } from 'antd';
+import { AppstoreOutlined, MailOutlined, UserSwitchOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Menu, MenuProps } from 'antd';
 import { useTheme } from '@/contexts';
 import { ROUTE_PATH } from '@/constants';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/auth-context/useAuth';
+import { useAuth } from '@/contexts';
 
 const items: MenuProps['items'] = [
   {
     label: 'Home',
     key: ROUTE_PATH.APP.ROOT,
     icon: <MailOutlined />,
-  },
-  {
-    label: 'Search',
-    key: '#search',
-    icon: <AppstoreOutlined />,
-  },
-  {
-    label: 'Create',
-    key: '#create',
-    icon: <SettingOutlined />,
-    children: [
-      {
-        label: 'Team',
-        key: '#create:team',
-      },
-      {
-        label: 'Event',
-        key: '#create:event',
-      },
-    ],
   },
   {
     label: 'My Task',
@@ -42,8 +22,13 @@ const items: MenuProps['items'] = [
     icon: <AppstoreOutlined />,
   },
   {
-    label: 'Logout',
-    key: '#logout',
+    label: 'Search',
+    key: '#search',
+    icon: <AppstoreOutlined />,
+  },
+  {
+    label: 'Switch theme',
+    key: '#toggle-theme',
     icon: <AppstoreOutlined />,
   },
 ];
@@ -52,13 +37,16 @@ export const Header = () => {
   const { toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   return (
-    <Layout.Header className="h-[110px] p-0">
+    <Layout.Header className="p-0">
       <Menu
         onSelect={({ key }) => {
           if (key[0] === '#') {
             switch (key) {
+              case '#toggle-theme':
+                toggleTheme();
+                break;
               case '#logout':
                 logout();
                 break;
@@ -67,15 +55,32 @@ export const Header = () => {
             }
             return;
           }
+          // Default will redirect to the menu key path
           navigate(key);
         }}
         selectedKeys={[location.pathname]}
         mode="horizontal"
-        items={items}
+        items={[
+          ...items,
+          {
+            label: `${user?.firstName} ${user?.lastName}`,
+            key: '#create',
+            icon: <UserSwitchOutlined />,
+            children: [
+              {
+                label: 'My Profile',
+                key: '#my-profile',
+                icon: <UserOutlined />,
+              },
+              {
+                icon: <LogoutOutlined />,
+                label: 'Logout',
+                key: '#logout',
+              },
+            ],
+          },
+        ]}
       />
-      <Button htmlType="button" size="small" onClick={toggleTheme}>
-        Toggle theme
-      </Button>
     </Layout.Header>
   );
 };

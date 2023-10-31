@@ -2,14 +2,14 @@ import * as yup from 'yup';
 import { ROUTE_PATH } from '@/constants';
 import { Button, Form, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ControlledInput } from '@/components/common/form/controlled-input';
 import { INPUT_TYPES } from '@/types/input';
 import { useLoginMutation } from '@/gql-type-and-hook';
 import { handleBasicError } from '@/utils/func';
-import { useAuth } from '@/contexts/auth-context/useAuth';
+import { useAuth } from '@/contexts';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('Required'),
@@ -22,12 +22,7 @@ type FormValues = {
 };
 
 export const LoginPage = () => {
-  const {
-    handleSubmit,
-    formState: { errors },
-    reset,
-    control,
-  } = useForm({
+  const { handleSubmit, reset, control } = useForm({
     resolver: yupResolver<FormValues>(schema),
   });
   const { user, setUser } = useAuth();
@@ -62,11 +57,17 @@ export const LoginPage = () => {
           layout="vertical"
           className="space-y-6"
         >
-          <ControlledInput name="email" control={control} type={INPUT_TYPES.INPUT} formItemProps={{ label: 'Email' }} />
+          <ControlledInput
+            placeholder="Input password"
+            name="email"
+            control={control}
+            type={INPUT_TYPES.INPUT}
+            formItemProps={{ label: 'Email' }}
+          />
           <ControlledInput
             name="password"
             control={control}
-            type={INPUT_TYPES.INPUT}
+            type={INPUT_TYPES.PASSWORD}
             formItemProps={{ label: 'Password' }}
           />
 

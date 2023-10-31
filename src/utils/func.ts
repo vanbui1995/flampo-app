@@ -1,3 +1,5 @@
+import { LOCAL_STORAGE_KEY } from '@/constants';
+import { RegisterResponseDto } from '@/gql-type-and-hook';
 import { IGraphQLErrorResponse } from '@/types';
 import { notification } from 'antd';
 import { t } from 'i18next';
@@ -21,4 +23,18 @@ export const handleBasicError = (e: IGraphQLErrorResponse): void => {
       message: finalText,
     });
   });
+};
+
+export const parseUserFromLocalStorage = (): RegisterResponseDto | null => {
+  const jsonString = localStorage.getItem(LOCAL_STORAGE_KEY.AUTH);
+  try {
+    if (jsonString) {
+      const user: RegisterResponseDto = JSON.parse(jsonString);
+      return user;
+    }
+    return null;
+  } catch (error) {
+    console.warn(`Can't parse json, set null for default`);
+    return null;
+  }
 };
