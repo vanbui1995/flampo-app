@@ -9,19 +9,24 @@ export const objectKeys = <T extends object>(object: T): Array<keyof T> => {
 };
 
 export const handleBasicError = (e: IGraphQLErrorResponse): void => {
-  e.response.errors.forEach((item) => {
-    const errorCode = item?.extensions?.appErrorCode;
-    const plainText = item?.message;
-    let finalText = '';
-    if (errorCode || plainText) {
-      finalText = errorCode ? t(`errors.${errorCode}`) : plainText;
-    } else {
-      finalText = t('errors.UNEXPECTED_ERRORS');
-    }
-    console.error(e);
-    notification.error({
-      message: finalText,
+  let finalText = '';
+  if (e?.response?.errors) {
+    e.response.errors.forEach((item) => {
+      const errorCode = item?.extensions?.appErrorCode;
+      const plainText = item?.message;
+      if (errorCode || plainText) {
+        finalText = errorCode ? t(`errors.${errorCode}`) : plainText;
+      } else {
+        finalText = t('errors.UNEXPECTED_ERRORS');
+      }
+      console.error(e);
     });
+  } else {
+    // If the error does not follow the backend format show unexpected error
+    finalText = t('errors.UNEXPECTED_ERRORS');
+  }
+  notification.error({
+    message: finalText,
   });
 };
 

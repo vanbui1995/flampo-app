@@ -1,5 +1,5 @@
-import * as yup from 'yup';
-import { ROUTE_PATH } from '@/constants';
+
+import { ROUTE_PATH, loginYupSchema } from '@/constants';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Form, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -12,10 +12,7 @@ import { useLoginMutation } from '@/gql-type-and-hook';
 import { handleBasicError } from '@/utils/func';
 import { useAuth } from '@/contexts';
 
-const schema = yup.object().shape({
-  email: yup.string().email().required('Required'),
-  password: yup.string().min(6, 'Must be at least 6 characters').required('Required'),
-});
+
 
 type FormValues = {
   email: string;
@@ -24,7 +21,7 @@ type FormValues = {
 
 export const LoginPage = () => {
   const { handleSubmit, reset, control } = useForm({
-    resolver: yupResolver<FormValues>(schema),
+    resolver: yupResolver<FormValues>(loginYupSchema),
   });
   const location = useLocation();
   const from: string = location.state?.from;

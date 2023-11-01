@@ -29,7 +29,11 @@ export const useFetchData = <TData, TVariables>(
         requestHeaders: headers,
       })
       .catch((e) => {
-        if ((e as unknown as IGraphQLErrorResponse).response.errors[0].extensions.appErrorCode === 'TOKEN_EXPIRES') {
+        if (
+          (e as unknown as IGraphQLErrorResponse)?.response?.errors.find(
+            (error) => error.extensions.appErrorCode === 'TOKEN_EXPIRES',
+          )
+        ) {
           console.log(e);
           logout();
         }
